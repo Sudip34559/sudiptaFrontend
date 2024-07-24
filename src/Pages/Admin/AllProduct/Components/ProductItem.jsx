@@ -3,9 +3,9 @@ import { ArrowRight } from "lucide-react";
 import { X } from "lucide-react";
 import { Link, useNavigate, redirect } from "react-router-dom";
 
-const ProductItem = ({ item,deeleteToItem,setOpen }) => {
+const ProductItem = ({ item, deeleteToItem, setOpen }) => {
   const navigate = useNavigate();
-  console.log(item.image)
+  // console.log(item.image)
   return (
     <>
       <tr key={item._id}>
@@ -25,10 +25,9 @@ const ProductItem = ({ item,deeleteToItem,setOpen }) => {
           </div>
           {/* </div> */}
         </td>
-       
 
         <td className="whitespace-nowrap px-0 py-4">
-        <img
+          <img
             className="h-10 w-10 rounded-full object-cover"
             src={`http://localhost:8000${item.image}`}
             alt=""
@@ -41,7 +40,9 @@ const ProductItem = ({ item,deeleteToItem,setOpen }) => {
           <div className="text-sm font-medium text-gray-900">{item.stock}</div>
         </td>
         <td className="whitespace-nowrap px-0 py-4">
-          <div className="text-sm font-medium text-gray-900">{item.description}</div>
+          <div className="text-sm font-medium text-gray-900">
+            {item.description}
+          </div>
         </td>
         <td className="whitespace-nowrap px-0 py-4">
           <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
@@ -50,10 +51,9 @@ const ProductItem = ({ item,deeleteToItem,setOpen }) => {
         </td>
         <td className="whitespace-nowrap px-0 py-4 flex justify-center">
           <button
-          
-          onClick={()=>{
-            navigate(`/productEdit`,{state:item})
-          }}
+            onClick={() => {
+              navigate(`/productEdit`, { state: item });
+            }}
             className="rounded-md
      bg-green-500 px-3 py-2 text-sm font-semibold
      
@@ -62,15 +62,10 @@ const ProductItem = ({ item,deeleteToItem,setOpen }) => {
             Edit
           </button>
           <button
-           onClick={()=>{
-           
-           
-            
-            setOpen(true )
-            deeleteToItem(item._id)
-          }
-            
-          }
+            onClick={() => {
+              setOpen(true);
+              deeleteToItem(item._id);
+            }}
             className="rounded-md ml-5 bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           >
             Delete

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../../Reducer/Auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../Api";
+import { addToCart } from "../../Reducer/cart";
 
 const menuItems = [
   {
@@ -26,12 +27,29 @@ const menuItems = [
     name: "Product",
     href: "/product",
   },
+  {
+    name: "Profile",
+    href: "/profile",
+  },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const c = JSON.parse(localStorage.getItem("cart"));
+  let cartValue = c ? c.length : 0;
+  const { cart } = useSelector((store) => store.cart);
+
+  const [cartNumber, setCartNumber] = React.useState(cartValue);
+  // console.log("c", cartValue);
+  useEffect(() => {
+    // console.log("dd", cart);
+    if (cart.length) {
+      setCartNumber(cart.length);
+    }
+  }, [cart]);
+
   const handleLogout = async () => {
     try {
       const data = await logoutUser();
@@ -50,7 +68,7 @@ const Header = () => {
   };
 
   return (
-    <div className="relative w-full bg-white">
+    <div className="fixed w-full bg-white border-b-[1px] border-b-neutral-700">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <span></span>
@@ -74,6 +92,14 @@ const Header = () => {
                 </NavLink>
               </li>
             ))}
+            <li>
+              <NavLink to="/cart" className="relative z-0 text-2xl">
+                🛒
+                <span className="w-[15px] h-[15px] rounded-full bg-black/50 text-white text-sm flex justify-center items-center absolute top-0 left-1 z-10">
+                  {cartNumber}
+                </span>
+              </NavLink>
+            </li>
           </ul>
         </div>
         <div className="hidden lg:block">
@@ -121,6 +147,15 @@ const Header = () => {
                         </span>
                       </a>
                     ))}
+                    <a
+                      href="/cart"
+                      className=" flex items-center pl-3  w-[30px] h-[30px] relative z-0 text-2xl "
+                    >
+                      🛒
+                      <span className="w-[15px] h-[15px] rounded-full bg-black/50 text-white text-sm flex justify-center items-center absolute top-0 left-[14px] z-10">
+                        {cartNumber}
+                      </span>
+                    </a>
                   </nav>
                 </div>
                 <button

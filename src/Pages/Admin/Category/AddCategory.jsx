@@ -1,42 +1,34 @@
-
-
-
 import React from "react";
 import { ArrowRight } from "lucide-react";
 
-
 import { toast } from "react-toastify";
 
-import { useNavigate, redirect, } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-
-
-import {useFormik } from "formik";
+import { useFormik } from "formik";
 
 import AdminLayout from "../../../Components/Admin/AdminLayout";
 import { categoryValidation } from "../../../SchemaValidation/CategoryValidation";
-import { addCategory } from "../../../Api";
+import { addCategory, editCategory } from "../../../Api";
 import { useState } from "react";
 import CircleLoder from "../../../Components/Loder/CircleLoder";
-import { errorMessage,successMessage } from "../../../Helper";
+import { errorMessage, successMessage } from "../../../Helper";
+import { addCategoryOnRedux } from "../../../Reducer/category";
+import useFetchCategories from "../../../hook/category";
 
-
-const AddCategory = () => {
+const AddCategory = ({ editState }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loding,setLoding]=useState(false)
-
-
+  const [loding, setLoding] = useState(false);
   const { role } = useSelector((state) => state.auth);
   // console.log(email, "email");
   // console.log(pass, "pass");
 
-  const onSubmitHandler = (values,resetForm) => {
+  const onSubmitHandler = (values, resetForm) => {
     // errorMessage("err.response.data.message");
-    setLoding(true)
+    setLoding(true);
     addCategory(values)
-
       .then((res) => {
         // if (!response.ok) {
         //   throw new Error(data.message);
@@ -44,21 +36,28 @@ const AddCategory = () => {
         // console.log(res.data,'data')
         // console.log(res.data.data.role,'name')
 
-        
-
         //  console.log(res);
-         setLoding(false)
-         successMessage(res.data.message);
+        dispatch(
+          addCategoryOnRedux({
+            data: res.data.data,
+            error: "",
+            loding: false,
+          })
+        );
+        // console.log(res.data.data._id);
+        setLoding(false);
+        navigate("/allCetegory");
+        successMessage(res.data.message);
       })
       .catch((error) => {
-        setLoding(false)
-     
+        setLoding(false);
+
         // setLoding(false)
-         errorMessage(error.response.data.message);
+        errorMessage(error.response.data.message);
         //  console.log(error.response.data.message, "err");
         // console.log(err.message, "err.message");
       });
-      // resetForm();
+    // resetForm();
   };
 
   const {
@@ -71,33 +70,24 @@ const AddCategory = () => {
     isSubmitting,
     isValid,
     resetForm,
-
-    
-  } = 
-  useFormik({
+  } = useFormik({
     validationSchema: categoryValidation,
     initialValues: {
       title: "",
-      
     },
-  //  validateOnChange:true,
-   // validateOnMount:true,
+    //  validateOnChange:true,
+    // validateOnMount:true,
     onSubmit: (values) => {
-
-      onSubmitHandler(values, resetForm )
+      onSubmitHandler(values, resetForm);
     },
-    
-
-    
   });
   // console.log(isSubmitting,'isValid', isValid)
   // if (loding) return <CircleLoder/>
   return (
     <AdminLayout>
       <div className="relative">
-        {loding &&  <CircleLoder/>}
-       
-     
+        {loding && <CircleLoder />}
+
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md border-8 border-indigo-500 p-8">
             <div className="mb-2 flex justify-center">
@@ -117,7 +107,6 @@ const AddCategory = () => {
             <h2 className="text-center text-2xl font-bold leading-tight text-black">
               Add Category
             </h2>
-            
 
             <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">
@@ -131,8 +120,6 @@ const AddCategory = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                   
-                    
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       value={values.title}
                       placeholder={"Enter Email"}
@@ -146,7 +133,7 @@ const AddCategory = () => {
                     <p className="text-red-500">{errors.title}</p>
                   )}
                 </div>
-                
+
                 <div>
                   <button
                     disabled={!isValid}
@@ -155,7 +142,7 @@ const AddCategory = () => {
                      rounded-md
                      bg-black px-3.5 py-2.5 font-semibold leading-7
                       hover:bg-black/80
-                       ${!isValid?"text-green-500":"text-red-300"}`}
+                       ${!isValid ? "text-green-500" : "text-red-300"}`}
                   >
                     Save <ArrowRight className="ml-2" size={16} />
                   </button>
@@ -163,9 +150,7 @@ const AddCategory = () => {
               </div>
             </form>
 
-            <div className="mt-3 space-y-3">
-             
-            </div>
+            <div className="mt-3 space-y-3"></div>
           </div>
         </div>
       </div>

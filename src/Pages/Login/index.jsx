@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 
-import { useNavigate, redirect, } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Reducer/Auth";
 import { loginApi } from "../../Api";
@@ -14,13 +14,12 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
- 
   // console.log(email, "email");
   // console.log(pass, "pass");
 
-  const onSubmitHandler = (values,resetForm) => {
+  const onSubmitHandler = (values, resetForm) => {
     // console.log(values, resetForm)
-    
+
     // e.preventDefault();
     // console.log("submit");
 
@@ -36,22 +35,18 @@ const Login = () => {
           localStorage.setItem("userdata", JSON.stringify(res.data.data));
           dispatch(login(res.data.data));
           resetForm();
-          redirect("/admin",{ replace: true });
-         
+          redirect("/admin", { replace: true });
         } else {
           localStorage.setItem("userdata", JSON.stringify(res.data.data));
           resetForm();
           dispatch(login(res.data.data));
-          redirect("/dashboard",{ replace: true });
-         
-          
+          redirect("/dashboard", { replace: true });
         }
 
         // console.log(res);
       })
       .catch((err) => {
-        
-        errorMessage(err.response.data.message)
+        errorMessage(err.response.data.message);
       });
   };
 
@@ -65,31 +60,24 @@ const Login = () => {
     isSubmitting,
     isValid,
     resetForm,
-
-    
-  } = 
-  useFormik({
+  } = useFormik({
     validationSchema: loginValidationSchema,
     initialValues: {
       email: "",
       password: "",
     },
-  //  validateOnChange:true,
-   // validateOnMount:true,
+    //  validateOnChange:true,
+    // validateOnMount:true,
     onSubmit: (values) => {
-
-      onSubmitHandler(values, resetForm )
+      onSubmitHandler(values, resetForm);
     },
-    
-
-    
   });
   // console.log(isSubmitting,'isValid', isValid)
   return (
     <Layout>
       <section>
-        <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
-          <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
+        <div className="flex w-full h-screen items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+          <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden px-6">
             <div className="mb-2 flex justify-center">
               <svg
                 width="50"
@@ -110,7 +98,7 @@ const Login = () => {
             <p className="mt-2 text-center text-sm text-gray-600 ">
               Don&#x27;t have an account?{" "}
               <a
-                href="#"
+                href="/register"
                 title=""
                 className="font-semibold text-black transition-all duration-200 hover:underline"
               >
@@ -130,8 +118,6 @@ const Login = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                   
-                    
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       value={values.email}
                       placeholder={"Enter Email"}
@@ -154,7 +140,7 @@ const Login = () => {
                       Password{" "}
                     </label>
                     <a
-                      href="#"
+                      href="/forget-password"
                       title=""
                       className="text-sm font-semibold text-black hover:underline"
                     >
@@ -184,7 +170,7 @@ const Login = () => {
                      rounded-md
                      bg-black px-3.5 py-2.5 font-semibold leading-7
                       hover:bg-black/80
-                       ${!isValid?"text-green-500":"text-red-300"}`}
+                       ${!isValid ? "text-green-500" : "text-red-300"}`}
                   >
                     Get started <ArrowRight className="ml-2" size={16} />
                   </button>
